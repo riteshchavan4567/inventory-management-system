@@ -27,9 +27,18 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
-    // GET API - Fetch product by id
+    // GET API - Fetch product by ID
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
         return productService.getProductById(id);
+    }
+
+    // PUT API - Update product
+    @PutMapping("/{id}")
+    public Product updateProduct(
+            @PathVariable Long id,
+            @RequestBody Product product) {
+
+        return productService.updateProduct(id, product);
     }
 }
