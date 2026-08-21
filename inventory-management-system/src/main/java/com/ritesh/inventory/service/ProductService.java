@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.ritesh.inventory.entity.Product;
+import com.ritesh.inventory.exception.ProductNotFoundException;
 import com.ritesh.inventory.repository.ProductRepository;
 
 @Service
@@ -29,7 +30,7 @@ public class ProductService {
     // Get product by ID
     public Product getProductById(Long id) {
         return productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ProductNotFoundException(
                         "Product not found with id: " + id));
     }
 
@@ -37,7 +38,7 @@ public class ProductService {
     public Product updateProduct(Long id, Product updatedProduct) {
 
         Product existingProduct = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ProductNotFoundException(
                         "Product not found with id: " + id));
 
         existingProduct.setName(updatedProduct.getName());
@@ -53,7 +54,7 @@ public class ProductService {
     public void deleteProduct(Long id) {
 
         Product product = productRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow(() -> new ProductNotFoundException(
                         "Product not found with id: " + id));
 
         productRepository.delete(product);
