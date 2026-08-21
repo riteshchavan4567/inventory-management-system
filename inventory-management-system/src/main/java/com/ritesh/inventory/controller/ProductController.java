@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import com.ritesh.inventory.entity.Product;
 import com.ritesh.inventory.service.ProductService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/products")
 public class ProductController {
@@ -17,7 +19,7 @@ public class ProductController {
 
     // POST API - Save a new product
     @PostMapping
-    public Product addProduct(@RequestBody Product product) {
+    public Product addProduct(@Valid @RequestBody Product product) {
         return productService.saveProduct(product);
     }
 
@@ -37,12 +39,11 @@ public class ProductController {
     @PutMapping("/{id}")
     public Product updateProduct(
             @PathVariable Long id,
-            @RequestBody Product product) {
-
+            @Valid @RequestBody Product product) {
         return productService.updateProduct(id, product);
     }
 
-    // DELETE API - Delete product by ID
+    // DELETE API - Delete product
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
