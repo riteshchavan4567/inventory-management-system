@@ -8,6 +8,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import com.ritesh.inventory.dto.ProductRequest;
+import com.ritesh.inventory.dto.ProductResponse;
 import com.ritesh.inventory.entity.Product;
 import com.ritesh.inventory.exception.ProductNotFoundException;
 import com.ritesh.inventory.repository.ProductRepository;
@@ -21,13 +23,40 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
+    // Convert Product entity to ProductResponse
+    private ProductResponse convertToResponse(Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.getQuantity(),
+                product.getCategory()
+        );
+    }
+
     // Save a new product
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
+    public ProductResponse saveProduct(ProductRequest request) {
+
+        Product product = new Product();
+
+        product.setName(request.getName());
+        product.setDescription(request.getDescription());
+        product.setPrice(request.getPrice());
+        product.setQuantity(request.getQuantity());
+        product.setCategory(request.getCategory());
+
+        Product savedProduct = productRepository.save(product);
+
+        return convertToResponse(savedProduct);
     }
 
     // Get all products with pagination and sorting
-    public Page<Product> getAllProducts(int page, int size, String sortBy, String direction) {
+    public Page<ProductResponse> getAllProducts(
+            int page,
+            int size,
+            String sortBy,
+            String direction) {
 
         Sort sort = direction.equalsIgnoreCase("desc")
                 ? Sort.by(sortBy).descending()
@@ -35,40 +64,54 @@ public class ProductService {
 
         Pageable pageable = PageRequest.of(page, size, sort);
 
-        return productRepository.findAll(pageable);
+        return productRepository.findAll(pageable)
+                .map(this::convertToResponse);
     }
 
     // Search products by name
-    public List<Product> searchByName(String name) {
-        return productRepository.findByNameContainingIgnoreCase(name);
+    public List<ProductResponse> searchByName(String name) {
+        return productRepository.findByNameContainingIgnoreCase(name)
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
     // Search products by category
-    public List<Product> searchByCategory(String category) {
-        return productRepository.findByCategoryIgnoreCase(category);
+    public List<ProductResponse> searchByCategory(String category) {
+        return productRepository.findByCategoryIgnoreCase(category)
+                .stream()
+                .map(this::convertToResponse)
+                .toList();
     }
 
     // Get product by ID
-    public Product getProductById(Long id) {
-        return productRepository.findById(id)
+    public ProductResponse getProductById(Long id) {
+
+        Product product = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(
                         "Product not found with id: " + id));
+
+        return convertToResponse(product);
     }
 
     // Update an existing product
-    public Product updateProduct(Long id, Product updatedProduct) {
+    public ProductResponse updateProduct(
+            Long id,
+            ProductRequest request) {
 
         Product existingProduct = productRepository.findById(id)
                 .orElseThrow(() -> new ProductNotFoundException(
                         "Product not found with id: " + id));
 
-        existingProduct.setName(updatedProduct.getName());
-        existingProduct.setDescription(updatedProduct.getDescription());
-        existingProduct.setCategory(updatedProduct.getCategory());
-        existingProduct.setPrice(updatedProduct.getPrice());
-        existingProduct.setQuantity(updatedProduct.getQuantity());
+        existingProduct.setName(request.getName());
+        existingProduct.setDescription(request.getDescription());
+        existingProduct.setCategory(request.getCategory());
+        existingProduct.setPrice(request.getPrice());
+        existingProduct.setQuantity(request.getQuantity());
 
-        return productRepository.save(existingProduct);
+        Product updatedProduct = productRepository.save(existingProduct);
+
+        return convertToResponse(updatedProduct);
     }
 
     // Delete product by ID

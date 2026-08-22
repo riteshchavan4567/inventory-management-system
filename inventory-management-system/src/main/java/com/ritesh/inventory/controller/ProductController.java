@@ -6,7 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
-import com.ritesh.inventory.entity.Product;
+import com.ritesh.inventory.dto.ProductRequest;
+import com.ritesh.inventory.dto.ProductResponse;
 import com.ritesh.inventory.service.ProductService;
 
 import jakarta.validation.Valid;
@@ -20,50 +21,61 @@ public class ProductController {
 
     // POST API - Save a new product
     @PostMapping
-    public Product addProduct(@Valid @RequestBody Product product) {
-        return productService.saveProduct(product);
+    public ProductResponse addProduct(
+            @Valid @RequestBody ProductRequest request) {
+
+        return productService.saveProduct(request);
     }
 
     // GET API - Fetch all products with pagination and sorting
     @GetMapping
-    public Page<Product> getAllProducts(
+    public Page<ProductResponse> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id") String sortBy,
             @RequestParam(defaultValue = "asc") String direction) {
 
-        return productService.getAllProducts(page, size, sortBy, direction);
+        return productService.getAllProducts(
+                page, size, sortBy, direction);
     }
 
     // GET API - Search products by name
     @GetMapping("/search/name")
-    public List<Product> searchByName(@RequestParam String name) {
+    public List<ProductResponse> searchByName(
+            @RequestParam String name) {
+
         return productService.searchByName(name);
     }
 
     // GET API - Search products by category
     @GetMapping("/search/category")
-    public List<Product> searchByCategory(@RequestParam String category) {
+    public List<ProductResponse> searchByCategory(
+            @RequestParam String category) {
+
         return productService.searchByCategory(category);
     }
 
     // GET API - Fetch product by ID
     @GetMapping("/{id}")
-    public Product getProductById(@PathVariable Long id) {
+    public ProductResponse getProductById(
+            @PathVariable Long id) {
+
         return productService.getProductById(id);
     }
 
     // PUT API - Update product
     @PutMapping("/{id}")
-    public Product updateProduct(
+    public ProductResponse updateProduct(
             @PathVariable Long id,
-            @Valid @RequestBody Product product) {
-        return productService.updateProduct(id, product);
+            @Valid @RequestBody ProductRequest request) {
+
+        return productService.updateProduct(id, request);
     }
 
     // DELETE API - Delete product
     @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
+
         productService.deleteProduct(id);
     }
 }
