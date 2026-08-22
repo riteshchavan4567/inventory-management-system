@@ -2,6 +2,10 @@ package com.ritesh.inventory.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.ritesh.inventory.entity.Product;
@@ -22,9 +26,16 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    // Get all products
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    // Get all products with pagination and sorting
+    public Page<Product> getAllProducts(int page, int size, String sortBy, String direction) {
+
+        Sort sort = direction.equalsIgnoreCase("desc")
+                ? Sort.by(sortBy).descending()
+                : Sort.by(sortBy).ascending();
+
+        Pageable pageable = PageRequest.of(page, size, sort);
+
+        return productRepository.findAll(pageable);
     }
 
     // Search products by name

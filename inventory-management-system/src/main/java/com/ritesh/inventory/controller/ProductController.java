@@ -3,6 +3,7 @@ package com.ritesh.inventory.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import com.ritesh.inventory.entity.Product;
@@ -23,10 +24,15 @@ public class ProductController {
         return productService.saveProduct(product);
     }
 
-    // GET API - Fetch all products
+    // GET API - Fetch all products with pagination and sorting
     @GetMapping
-    public List<Product> getAllProducts() {
-        return productService.getAllProducts();
+    public Page<Product> getAllProducts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id") String sortBy,
+            @RequestParam(defaultValue = "asc") String direction) {
+
+        return productService.getAllProducts(page, size, sortBy, direction);
     }
 
     // GET API - Search products by name
