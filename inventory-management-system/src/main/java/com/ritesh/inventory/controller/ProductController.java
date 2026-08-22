@@ -29,6 +29,18 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    // GET API - Search products by name
+    @GetMapping("/search/name")
+    public List<Product> searchByName(@RequestParam String name) {
+        return productService.searchByName(name);
+    }
+
+    // GET API - Search products by category
+    @GetMapping("/search/category")
+    public List<Product> searchByCategory(@RequestParam String category) {
+        return productService.searchByCategory(category);
+    }
+
     // GET API - Fetch product by ID
     @GetMapping("/{id}")
     public Product getProductById(@PathVariable Long id) {
