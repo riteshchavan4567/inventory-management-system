@@ -1,38 +1,25 @@
-package com.ritesh.inventory.entity;
+package com.ritesh.inventory.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+public class ProductResponse {
 
-@Entity
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @NotBlank(message = "Product name is required")
     private String name;
-
     private String description;
-
-    @NotNull(message = "Price is required")
-    @Positive(message = "Price must be greater than 0")
     private Double price;
-
-    @NotNull(message = "Quantity is required")
-    @Min(value = 0, message = "Quantity cannot be negative")
     private Integer quantity;
-
-    @NotBlank(message = "Category is required")
     private String category;
 
-    public Product() {
+    public ProductResponse() {
+    }
+
+    public ProductResponse(Long id, String name, String description,
+                           Double price, Integer quantity, String category) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.quantity = quantity;
+        this.category = category;
     }
 
     public Long getId() {

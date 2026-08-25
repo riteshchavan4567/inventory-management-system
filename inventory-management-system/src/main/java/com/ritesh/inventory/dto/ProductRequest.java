@@ -1,20 +1,11 @@
-package com.ritesh.inventory.entity;
+package com.ritesh.inventory.dto;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-@Entity
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class ProductRequest {
 
     @NotBlank(message = "Product name is required")
     private String name;
@@ -32,15 +23,7 @@ public class Product {
     @NotBlank(message = "Category is required")
     private String category;
 
-    public Product() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public ProductRequest() {
     }
 
     public String getName() {
