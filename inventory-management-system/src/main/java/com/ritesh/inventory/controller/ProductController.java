@@ -11,6 +11,8 @@ import com.ritesh.inventory.dto.ProductResponse;
 import com.ritesh.inventory.service.ProductService;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import jakarta.validation.Valid;
@@ -29,6 +31,10 @@ public class ProductController {
         summary = "Create a new product",
         description = "Adds a new product to the inventory"
     )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Product created successfully"),
+        @ApiResponse(responseCode = "400", description = "Validation failed")
+    })
     public ProductResponse addProduct(
             @Valid @RequestBody ProductRequest request) {
 
@@ -41,6 +47,9 @@ public class ProductController {
         summary = "Get all products",
         description = "Retrieves products with pagination and sorting"
     )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Products retrieved successfully")
+    })
     public Page<ProductResponse> getAllProducts(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
@@ -57,6 +66,9 @@ public class ProductController {
         summary = "Search products by name",
         description = "Finds products whose name contains the given text"
     )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Products found successfully")
+    })
     public List<ProductResponse> searchByName(
             @RequestParam String name) {
 
@@ -69,6 +81,9 @@ public class ProductController {
         summary = "Search products by category",
         description = "Finds products belonging to the specified category"
     )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Products found successfully")
+    })
     public List<ProductResponse> searchByCategory(
             @RequestParam String category) {
 
@@ -81,6 +96,10 @@ public class ProductController {
         summary = "Get product by ID",
         description = "Retrieves a single product using its ID"
     )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Product found successfully"),
+        @ApiResponse(responseCode = "404", description = "Product not found")
+    })
     public ProductResponse getProductById(
             @PathVariable Long id) {
 
@@ -93,6 +112,11 @@ public class ProductController {
         summary = "Update a product",
         description = "Updates an existing product using its ID"
     )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Product updated successfully"),
+        @ApiResponse(responseCode = "400", description = "Validation failed"),
+        @ApiResponse(responseCode = "404", description = "Product not found")
+    })
     public ProductResponse updateProduct(
             @PathVariable Long id,
             @Valid @RequestBody ProductRequest request) {
@@ -103,9 +127,13 @@ public class ProductController {
     // DELETE API - Delete product
     @DeleteMapping("/{id}")
     @Operation(
-        summary = "Delete a product",
+        summary = "Delete product",
         description = "Deletes an existing product using its ID"
     )
+    @ApiResponses({
+        @ApiResponse(responseCode = "200", description = "Product deleted successfully"),
+        @ApiResponse(responseCode = "404", description = "Product not found")
+    })
     public void deleteProduct(@PathVariable Long id) {
 
         productService.deleteProduct(id);
